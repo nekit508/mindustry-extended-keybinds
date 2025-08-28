@@ -1,0 +1,14 @@
+{
+    "author": "nekit508",
+    "main": "com.github.template.core.ModCore",
+    "softDependencies": [
+        
+    ],
+    "version": "v0.0.4",
+    "dependencies": [
+        
+    ],
+    "java": true,
+    "name": "mmp-template-mod",
+    "minGameVersion": 146
+}
