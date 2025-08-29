@@ -2,14 +2,15 @@ plugins {
     id "com.github.nekit508.mindustry-mod-plugin" version "$nmpVersion" apply true
 }
 
-project.ext.jitpack = Boolean.parseBoolean(System.getenv("JITPACK") ?: "false");
+var forcedGroup = path.length() == 1 ? property("group") : ("$parent.group.$parent.name")
+var jitpack = Boolean.parseBoolean(System.getenv("JITPACK") ?: "false")
+if (jitpack) {
+    version = System.getenv("VERSION")
+    group = forcedGroup
 
-if (!project.ext.jitpack) {
-    project.logger.lifecycle("Building on local.")
-    project.version = modVersion
-    project.group = modGroup
+    println """$project info:\n    is jitpack build: $jitpack\n    version: $version\n    group: $group"""
 } else {
-    project.logger.lifecycle("Building on jitpack platform.")
+    group = forcedGroup
 }
 
 
