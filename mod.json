@@ -1,14 +1,15 @@
 {
+    "hidden": true,
     "author": "nekit508",
-    "main": "com.github.template.core.ModCore",
+    "main": "com.github.nekit508.emkb.core.EMKBCore",
     "softDependencies": [
         
     ],
-    "version": "v0.0.4",
+    "version": "v0.1.0",
     "dependencies": [
         
     ],
     "java": true,
-    "name": "mmp-template-mod",
-    "minGameVersion": 146
+    "name": "mindustry-extended-keybinds",
+    "minGameVersion": 151
 }

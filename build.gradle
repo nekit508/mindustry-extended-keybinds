@@ -2,6 +2,17 @@ plugins {
     id "com.github.nekit508.mindustry-mod-plugin" version "$nmpVersion" apply true
 }
 
+project.ext.jitpack = Boolean.parseBoolean(System.getenv("JITPACK") ?: "false");
+
+if (!project.ext.jitpack) {
+    project.logger.lifecycle("Building on local.")
+    project.version = modVersion
+    project.group = modGroup
+} else {
+    project.logger.lifecycle("Building on jitpack platform.")
+}
+
+
 allprojects.each {project ->
     project.repositories {
         mavenCentral()
@@ -15,17 +26,17 @@ allprojects.each {project ->
         mavenCentral()
     }
 
-    project.apply plugin: "java"
-    project.apply plugin: "idea"
+    project.plugins.apply "java"
+    project.plugins.apply "java-library"
+    project.plugins.apply "idea"
+    project.plugins.apply "maven-publish"
 
     project.sourceSets.main.java.srcDirs = ["src"]
     project.sourceSets.main.resources.srcDirs = ["res"]
 }
 
-group = modGroup
-version = modVersion
-
 nmp.core project, "core"
+
 core.settings {
     modName.set project.name
     modGroup.set project.group
@@ -34,15 +45,33 @@ core.settings {
     generateModInfo.set true
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 core.configure {
-    genericInit()
+    configureCompileTask()
+    setupJabel()
+    modBaseDependencies()
+
+    initTasks()
 
     core.configureTasks {
         nmpGenerateModInfo { task ->
             task.set(
-                    "main": "com.github.template.core.ModCore", // reconfigure it
-                    "author": "nekit508"                        // reconfigure it
+                    "main": "com.github.nekit508.emkb.core.EMKBCore",
+                    "author": "nekit508",
+                    "hidden": true
             )
+        }
+    }
+
+    publishing {
+        publications {
+            library(MavenPublication) {
+                from components.java
+            }
         }
     }
 }
