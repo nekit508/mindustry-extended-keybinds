@@ -2,17 +2,6 @@ plugins {
     id "com.github.nekit508.mindustry-mod-plugin" version "$nmpVersion" apply true
 }
 
-var forcedGroup = path.length() == 1 ? property("group") : ("$parent.group.$parent.name")
-var jitpack = Boolean.parseBoolean(System.getenv("JITPACK") ?: "false")
-if (jitpack) {
-    version = System.getenv("VERSION")
-    group = forcedGroup
-
-    println """$project info:\n    is jitpack build: $jitpack\n    version: $version\n    group: $group"""
-} else {
-    group = forcedGroup
-}
-
 
 allprojects.each {project ->
     project.repositories {
@@ -28,35 +17,27 @@ allprojects.each {project ->
     }
 
     project.plugins.apply "java"
-    project.plugins.apply "java-library"
     project.plugins.apply "idea"
-    project.plugins.apply "maven-publish"
-
-    project.sourceSets.main.java.srcDirs = ["src"]
-    project.sourceSets.main.resources.srcDirs = ["res"]
 }
+
+plugins.apply "maven-publish"
+plugins.apply "java-library"
+
+group = modGroup
+version = modVersion
 
 nmp.core project, "core"
 
 core.settings {
-    modName.set project.name
-    modGroup.set project.group
-    modVersion.set project.version
+    modName.set name
+    modGroup.set group as String
+    modVersion.set version as String
     mindustryVersion.set prop("mindustryVersion")
     generateModInfo.set true
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
 core.configure {
-    configureCompileTask()
-    setupJabel()
-    modBaseDependencies()
-
-    initTasks()
+    genericModInit(true)
 
     core.configureTasks {
         nmpGenerateModInfo { task ->
@@ -65,14 +46,6 @@ core.configure {
                     "author": "nekit508",
                     "hidden": true
             )
-        }
-    }
-
-    publishing {
-        publications {
-            library(MavenPublication) {
-                from components.java
-            }
         }
     }
 }
