@@ -47,7 +47,7 @@ public class KeybindsDialog extends BaseDialog {
 
         initMainWidgets();
 
-        Vars.ui.menufrag.addButton("@map-painter-keybindings-dialog", Icon.settings, this::show);
+        Vars.ui.menufrag.addButton(name, Icon.settings, this::show);
     }
 
     protected void initMainWidgets() {
