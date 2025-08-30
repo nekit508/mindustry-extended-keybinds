@@ -37,7 +37,7 @@ core.settings {
 }
 
 core.configure {
-    genericModInit(true)
+    genericModInit(true, group)
 
     core.configureTasks {
         nmpGenerateModInfo { task ->
